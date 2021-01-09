@@ -11,12 +11,23 @@
     <nav class="flex justify-between bg-gray-100 p-3 mb-6">
         <ul class="flex">
             <li class="px-2"><a href="{{ route('home.index') }}">Home</a></li>
-            <li class="px-2"><a href="{{ route('home.contact') }}">Contact</a></li>
+        <li class="px-2"><a href="{{ route('home.contact') }}">Contact</a></li>
          </ul>
 
          <ul class="flex">
             <li class="px-2"><a href="{{ route('posts.index') }}">Posts</a></li>
+            @guest
+            
+            <li class="px-2"><a href="{{ route('register') }}">Register</a></li>
+            <li class="px-2"><a href="{{ route('login') }}">Login</a></li>
+
+            @else
             <li class="px-2"><a href="{{ route('posts.create') }}">Add Post</a></li>
+                <form class="inline-block" action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="px-2 focus:outline-none">Logout ({{ (Auth::user()->name) }})</button>
+                </form>
+            @endguest
          </ul>
     </nav>
     <div class="bg-gray-100 rounded-lg w-8/12 m-auto p-6">

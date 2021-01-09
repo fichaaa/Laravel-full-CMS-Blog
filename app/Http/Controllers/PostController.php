@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePost;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +44,7 @@ class PostController extends Controller
     {
         $validate = $request->validated();
         $post = Post::make($validate);
-        $post->user_id = 1;
+        $post->user_id = $request->user()->id;
         $post->save();
         
      
@@ -66,7 +71,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        
+        $this->authorize($post);
         return view('posts.edit',['post' => $post]);
     }
 
@@ -79,6 +84,8 @@ class PostController extends Controller
      */
     public function update(StorePost $request, Post $post)
     {
+        $this->authorize($post);
+
         $validate = $request->validated();
         $post->fill($validate);
         $post->save();
@@ -96,6 +103,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $this->authorize($post);
+
         $post->delete();
 
         $posts = Post::all();

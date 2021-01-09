@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,4 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact')
 
 Route::resource('/posts', PostController::class);
 
+Auth::routes();
