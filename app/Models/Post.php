@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Scopes\LatestScope;
+use App\Scopes\DeletedAdminScope;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
@@ -18,7 +22,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->latest();
     }
 
     public function user()
@@ -26,9 +30,37 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    public function scopeLatest(Builder $query)
+    {
+        return $query->orderBy(static::CREATED_AT, 'desc');
+    }
+
+    public function scopeMostCommented(Builder $query)
+    {
+        return $query->withCount('comments')->orderBy('comments_count', 'desc');
+    }
+
+    public function scopeLatestWithRelation(Builder $query)
+    {
+        return $query->latest()->withCount('comments')->with('user')->with('tags');
+    }
+
     public static function boot()
     {
+        static::addGlobalScope(new DeletedAdminScope);
+
         parent::boot();
+
+        // static::addGlobalScope(new LatestScope);
+
+        static::updating(function(Post $post){
+            Cache::forget("post-{$post->id}");
+        });
 
         static::deleting(function(Post $post){
             $post->comments()->delete();

@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Post;
-use App\Models\User;
-use App\Models\Comment;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,8 +24,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             PostSeeder::class,
-            CommentSeeder::class
+            CommentSeeder::class,
+            TagSeeder::class,
+            PostTagSeeder::class
         ]);        
+
+
+        Cache::tags(['post'])->flush();
         
     }
 }

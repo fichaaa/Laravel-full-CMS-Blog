@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Comment extends Model
 {
@@ -15,8 +16,15 @@ class Comment extends Model
         'post_id'
     ];
 
+
+    public function scopeLatest(Builder $query)
+    {
+        return $query->orderBy(static::CREATED_AT, 'desc');
+    }
+
     public function post()
     {
         return $this->belongsTo(Post::class);
     }
+
 }

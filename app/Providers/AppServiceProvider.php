@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+
 use Illuminate\Support\ServiceProvider;
+use App\Http\ViewComposers\ActivityComposer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->composer(['posts.index', 'posts.show'], ActivityComposer::class);
     }
 }
