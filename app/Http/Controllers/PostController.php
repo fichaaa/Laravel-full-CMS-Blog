@@ -104,7 +104,7 @@ class PostController extends Controller
         $counter = Cache::tags(['post'])->get($counterKey);
 
         $post = Cache::tags(['post'])->remember("post-{$id}", 60, function() use($id){
-            return Post::with('comments')->with('user')->with('tags')->findOrFail($id);
+            return Post::with(['tags','comments','user'])->with('comments.user')->findOrFail($id);
         });
 
 

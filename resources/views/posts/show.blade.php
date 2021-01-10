@@ -41,10 +41,17 @@
         <div class="my-3">
             <h1>Comments</h1>
             <hr>
+            <form action="{{ route('posts.comments.store', ['post' => $post->id]) }}" method="POST">
+                @csrf
+                <textarea name="comment" class="w-full h-48 p-3" placeholder="Enter comment" value={{ old('comment') }}></textarea>
+
+                <button  type="submit" class="bg-blue-400 hover:bg-blue-500 text-white w-full p-2 rounded-lg">Submit</button>
+                <x-errors></x-errors>
+            </form>
             @forelse ($post->comments as $comment)
                 <div class="mb-3">
                     <p >{{ $comment->content }}</p>
-                    <x-update :item="$comment"></x-update>
+                    <x-update :item="$comment" :name="$comment->user->name"></x-update>
                 </div>
             @empty
                 <p>No comments yet!</p>
