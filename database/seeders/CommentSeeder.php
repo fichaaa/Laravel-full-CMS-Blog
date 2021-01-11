@@ -24,7 +24,17 @@ class CommentSeeder extends Seeder
         $comments = Comment::factory($commentCount)->make();
 
         $comments->each(function($comment) use($posts,$users){
-            $comment->post_id = $posts->random()->id;
+            $comment->commentable_id = $posts->random()->id;
+            $comment->commentable_type = Post::class;
+            $comment->user_id = $users->random()->id;
+            $comment->save();
+        });
+
+        $comments = Comment::factory($commentCount)->make();
+
+        $comments->each(function($comment) use($users){
+            $comment->commentable_id = $users->random()->id;
+            $comment->commentable_type = User::class;
             $comment->user_id = $users->random()->id;
             $comment->save();
         });

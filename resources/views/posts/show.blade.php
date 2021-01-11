@@ -7,6 +7,9 @@
 
 <div class="col-span-8">
     <div class="mb-4">
+        <div class="h-48 w-full rounded-sm bg-cover bg-no-repeat bg-center mb-3" style="background-image:url('{{ $post->image ? $post->image->url() : null }}')">
+
+        </div>
         <a class="text-lg {{ $post->trashed() ? 'text-gray-300' : 'text-blue-300' }} hover:text-blue-500 hover:underline cursor-pointer inline-block mb-2" href="{{ route('posts.show',['post' => $post->id]) }}">
             @if($post->trashed())
             <del>
@@ -41,21 +44,8 @@
         <div class="my-3">
             <h1>Comments</h1>
             <hr>
-            <form action="{{ route('posts.comments.store', ['post' => $post->id]) }}" method="POST">
-                @csrf
-                <textarea name="comment" class="w-full h-48 p-3" placeholder="Enter comment" value={{ old('comment') }}></textarea>
-
-                <button  type="submit" class="bg-blue-400 hover:bg-blue-500 text-white w-full p-2 rounded-lg">Submit</button>
-                <x-errors></x-errors>
-            </form>
-            @forelse ($post->comments as $comment)
-                <div class="mb-3">
-                    <p >{{ $comment->content }}</p>
-                    <x-update :item="$comment" :name="$comment->user->name"></x-update>
-                </div>
-            @empty
-                <p>No comments yet!</p>
-            @endforelse
+            <x-comment-form :route="route('posts.comments.store', ['post' => $post->id])"></x-comment-form>
+            <x-comment-list :comments="$post->comments"></x-comment-list>
         </div>
     </div>
     <div class="col-span-4">

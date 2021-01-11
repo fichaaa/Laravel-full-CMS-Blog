@@ -7,6 +7,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UserCommentController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +29,9 @@ Route::resource('/posts', PostController::class);
 Route::get('/posts/tags/{tag}', [TagController::class, 'show'])->name('posts.tag');
 
 Route::resource('posts.comments', PostCommentController::class)->only('store');
+
+Route::resource('users', UserController::class)->only(['show','edit','update']);
+
+Route::resource('users.comments', UserCommentController::class)->only(['store']);
 
 Auth::routes();

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Scopes\LatestScope;
 use App\Scopes\DeletedAdminScope;
+use App\Traits\Taggable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes, Taggable;
     
     protected $fillable = [
         'title',
@@ -22,7 +22,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->latest();
+        return $this->morphMany(Comment::class,'commentable')->latest();
     }
 
     public function user()
@@ -30,9 +30,9 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function tags()
+    public function image()
     {
-        return $this->belongsToMany(Tag::class)->withTimestamps();
+        return $this->morphOne(Image::class, 'imageable');
     }
 
     public function scopeLatest(Builder $query)
@@ -59,10 +59,11 @@ class Post extends Model
         // static::addGlobalScope(new LatestScope);
 
         static::updating(function(Post $post){
-            Cache::forget("post-{$post->id}");
+            Cache::tags(['post'])->forget("post-{$post->id}");
         });
 
         static::deleting(function(Post $post){
+            Cache::tags(['post'])->forget("post-{$post->id}");
             $post->comments()->delete();
         });
 
