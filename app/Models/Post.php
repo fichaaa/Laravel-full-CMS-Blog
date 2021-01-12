@@ -56,19 +56,5 @@ class Post extends Model
 
         parent::boot();
 
-        // static::addGlobalScope(new LatestScope);
-
-        static::updating(function(Post $post){
-            Cache::tags(['post'])->forget("post-{$post->id}");
-        });
-
-        static::deleting(function(Post $post){
-            Cache::tags(['post'])->forget("post-{$post->id}");
-            $post->comments()->delete();
-        });
-
-        static::restoring(function(Post $post){
-            $post->comments()->restore();
-        });
     }
 }

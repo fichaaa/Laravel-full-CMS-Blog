@@ -8,7 +8,7 @@
             @if($item->title)
             {{ route('posts.show',['post' => $item->id]) }}
             @else
-            #
+            {{ route('users.show', ['user' => $item->id]) }}
             @endif
             ">{{ $item->title ?? $item->name}}
         </a></li>

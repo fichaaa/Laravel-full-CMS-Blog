@@ -39,15 +39,4 @@ class Comment extends Model
         return $this->morphTo();
     }
 
-    public static function boot()
-    {   
-        parent::boot();
-
-        static::creating(function (Comment $comment)
-        {  
-            Cache::tags(['post'])->forget("post-{$comment->commentable_id}");
-            Cache::tags(['post'])->forget("post-most-commented");
-        });
-    }
-
 }

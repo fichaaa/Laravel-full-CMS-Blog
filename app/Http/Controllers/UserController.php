@@ -96,6 +96,7 @@ class UserController extends Controller
         }
 
         $user->name = $request->input('name');
+        $user->locale = $request->get('locale');
         $user->save();
 
         return redirect()->back()->withStatus('User was updated!');

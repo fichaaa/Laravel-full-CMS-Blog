@@ -25,7 +25,7 @@
         <p class="">{{ $post->content }}</p>
         <x-tags :tags="$post->tags"></x-tags>
         <x-update :item="$post"></x-update>
-        <p>Currently read by {{ $counter }} people</p>
+        <p>{{ trans_choice('messages.people.reading', $counter) }}</p>
         @auth
         <div class="my-2">  
             @can('update', $post)

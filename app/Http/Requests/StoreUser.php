@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUser extends FormRequest
@@ -25,7 +27,11 @@ class StoreUser extends FormRequest
     {
         return [
             'avatar' => 'image|mimes:jpeg,jpg,png|max:1024',
-            'name' => 'required|min:3'
+            'name' => 'required|min:3',
+            'locale' => [
+                'required',
+                Rule::in(array_keys(User::LOCALES))
+            ]
         ];
     }
 }

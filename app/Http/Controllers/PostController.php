@@ -6,6 +6,7 @@ use App\Models\Tag;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Events\PostCreatedEvent;
 use App\Http\Requests\StorePost;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
@@ -64,6 +65,8 @@ class PostController extends Controller
                 'path' => $path
             ]);
         }
+
+        event(new PostCreatedEvent($post));
      
         $request->session()->flash('status', 'Post was created!');
 

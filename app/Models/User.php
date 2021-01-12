@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Post;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,6 +13,12 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const LOCALES = [
+        'en' => 'English',
+        'es' => 'Spanish',
+        'de' => 'Detusch'
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +28,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'locale'
     ];
 
     /**
@@ -72,6 +80,19 @@ class User extends Authenticatable
         return $query->withCount(['posts' => function($query) {
           $query->whereBetween(static::CREATED_AT, [now()->subMonths(1), now()]);  
         }])->has('posts', '>=', 2)->orderBy('posts_count', 'desc');
+    }
+
+    public function scopeThatHasCommented(Builder $query, Post $post)
+    {
+        return $query->whereHas('comments', function(Builder $query) use($post) {
+            return $query->where('commentable_id','=', $post->id)
+                        ->where('commentable_type','=', Post::class);
+        });
+    }
+
+    public function scopeIsAdmin(Builder $query)
+    {
+        return $query->where('is_admin',true);
     }
 }
 

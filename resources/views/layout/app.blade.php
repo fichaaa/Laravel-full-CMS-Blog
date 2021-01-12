@@ -10,22 +10,23 @@
 <body>
     <nav class="flex justify-between bg-gray-100 p-3 mb-6">
         <ul class="flex">
-            <li class="px-2"><a href="{{ route('home.index') }}">Home</a></li>
-        <li class="px-2"><a href="{{ route('home.contact') }}">Contact</a></li>
+            <li class="px-2"><a href="{{ route('home.index') }}">{{ __('Home') }}</a></li>
+        <li class="px-2"><a href="{{ route('home.contact') }}">{{ __('Contact') }}</a></li>
          </ul>
 
          <ul class="flex">
-            <li class="px-2"><a href="{{ route('posts.index') }}">Posts</a></li>
+            <li class="px-2"><a href="{{ route('posts.index') }}">{{ __('Posts') }}</a></li>
             @guest
             
-            <li class="px-2"><a href="{{ route('register') }}">Register</a></li>
-            <li class="px-2"><a href="{{ route('login') }}">Login</a></li>
+            <li class="px-2"><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
+            <li class="px-2"><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
 
             @else
-            <li class="px-2"><a href="{{ route('posts.create') }}">Add Post</a></li>
+            <li class="px-2"><a href="{{ route('posts.create') }}">{{ __('Add') }}</a></li>
+            <li class="px-2"><a href="{{ route('users.show', ['user' => Auth::user()->id]) }}">{{ __('Profile') }}</a></li>
                 <form class="inline-block" action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="px-2 focus:outline-none">Logout ({{ (Auth::user()->name) }})</button>
+                    <button type="submit" class="px-2 focus:outline-none">{{ __('Logout') }} ({{ (Auth::user()->name) }})</button>
                 </form>
             @endguest
          </ul>

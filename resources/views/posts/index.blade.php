@@ -27,11 +27,7 @@
                 <p class="mb-1">{{ $post->content }}</p>
                 <x-tags :tags="$post->tags"></x-tags>
                 <x-update :item="$post"></x-update>
-                @if($post->comments_count)
-                    {{ $post->comments_count }}  comment{{ Helper::plural($post->comments_count) }}
-                @else
-                    No comments yet!
-                @endif
+                <p class="text-gray-400">{{ trans_choice('messages.comments', $post->comments_count) }}</p>
             </div>
         @empty
             <p>No posts found.</p>
