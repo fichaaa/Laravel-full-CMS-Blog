@@ -15,9 +15,11 @@
             <div>
                 <h1>{{ $user->name }}</h1>
             </div>
+            <p>Currently viewed by {{ $counter }} users</p>
             @can('update', $user)
             <a href="{{ route('users.edit',['user' => $user->id]) }}" class="bg-blue-400 hover:bg-blue:500 text-white rounded-sm py-1 px-3 my-2 inline-block">Edit User</a>
             @endcan
+           
             <p>Comments</p>
             <hr>
             <x-comment-form :route="route('users.comments.store', ['user' => $user->id])"></x-comment-form>

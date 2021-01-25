@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\CounterFacade;
 use App\Models\User;
 use App\Models\Image;
+use App\Services\Counter;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUser;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +17,7 @@ class UserController extends Controller
     {
         $this->middleware('auth');
         $this->authorizeResource(User::class, 'user');
+
     }
     /**
      * Display a listing of the resource.
@@ -55,7 +58,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show',['user' => $user]);
+
+        return view('users.show',['user' => $user, 'counter' => CounterFacade::increment($user->id)]);
     }
 
     /**
